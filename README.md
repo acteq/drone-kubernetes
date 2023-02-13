@@ -1,3 +1,5 @@
+git.treasuryos.sunrate.com/innovation/drone-kubernetes
+
 # Kubernetes plugin for drone.io [![Docker Repository on Quay](https://quay.io/repository/honestbee/drone-kubernetes/status "Docker Repository on Quay")](https://quay.io/repository/honestbee/drone-kubernetes)
 
 This plugin allows to update a Kubernetes deployment.
@@ -124,38 +126,32 @@ enabled, you will not be able to use the default service account, since it does
 not have access to update deployments.  Instead, you will need to create a
 custom service account with the appropriate permissions (`Role` and `RoleBinding`, or `ClusterRole` and `ClusterRoleBinding` if you need access across namespaces using the same service account).
 
-As an example (for the `web` namespace):
+As an example:
 
 ```yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: drone-deploy
-  namespace: web
 
 ---
-
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
 metadata:
   name: drone-deploy
-  namespace: web
 rules:
-  - apiGroups: ["extensions"]
+  - apiGroups: ["apps"]
     resources: ["deployments"]
     verbs: ["get","list","patch","update"]
 
 ---
-
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
   name: drone-deploy
-  namespace: web
 subjects:
   - kind: ServiceAccount
     name: drone-deploy
-    namespace: web
 roleRef:
   kind: Role
   name: drone-deploy

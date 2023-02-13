@@ -40,9 +40,10 @@ for DEPLOY in ${DEPLOYMENTS[@]}; do
   for CONTAINER in ${CONTAINERS[@]}; do
     if [[ ${PLUGIN_FORCE} == "true" ]]; then
       kubectl -n ${PLUGIN_NAMESPACE} set image deployment/${DEPLOY} \
-        ${CONTAINER}=${PLUGIN_REPO}:${PLUGIN_TAG}FORCE
+        ${CONTAINER}=${PLUGIN_IMAGE}:${PLUGIN_TAG}FORCE
     fi
     kubectl -n ${PLUGIN_NAMESPACE} set image deployment/${DEPLOY} \
-      ${CONTAINER}=${PLUGIN_REPO}:${PLUGIN_TAG} --record
+      ${CONTAINER}=${PLUGIN_IMAGE}:${PLUGIN_TAG} --record
   done
+  kubectl -n ${PLUGIN_NAMESPACE} rollout status deployment ${DEPLOY}
 done
